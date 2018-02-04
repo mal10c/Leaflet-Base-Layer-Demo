@@ -1,0 +1,213 @@
+<!--
+
+This website shows how to transition between Esri and Google base layers
+using Leaflet.
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet: Base Layer Switcher</title>
+
+	<!--
+	If you'd like to use Google base layers, you're going to need your own unique
+	API key.  To get one, go here:
+	https://developers.google.com/maps/documentation/javascript/get-api-key
+
+	Then replace <YOUR KEY HERE> with your key.
+	-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=<YOUR KEY HERE>" async defer></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+
+	<!--
+	Pull in the leaflet library
+	-->
+	<script src="http://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+
+	<!--
+	Pull in Esri base layers and the ability to use L.tileLayer.provider
+	-->
+	<script src="leaflet-providers.js"></script>
+
+	<!--
+	Additional amazing library that allows us to integrate Google base
+	layers with Leaflet
+	-->
+	<script type="text/javascript" src="Leaflet.GoogleMutant.js"></script>
+
+	<!-- Set map dimensions to occupy the whole page -->
+	<style>
+	#map {
+		width: calc( 100vw - 64px );
+		height: calc( 100vh - 64px );
+	}
+	body { margin: 0 }
+
+	</style>
+</head>
+<body>
+
+	<!--
+	This is our map.  All the JavaScript below this will
+	manipulate this map to show a base layer
+	-->
+	<div id="map" class="map"></div>
+
+
+	<script type="text/javascript">
+
+		// Show the zoom control in the upper left corner
+		var mapopts =  {
+	    	zoomControl: true
+		};
+
+		// Activate zoom control and center map on Iowa City.
+		// Also set zoom level to 14, which seems like a
+		// good value for that location.
+		var iowaCityLocation = [41.6582517, -91.5168481];
+		var map = L.map('map', mapopts).setView(iowaCityLocation, 14);
+
+		// ************************************************************
+		// [Start] Google base layer variables
+		// These variables are set to JSON values within the available 
+		// base layers
+		// ************************************************************
+		var roadMutant = L.gridLayer.googleMutant({
+			maxZoom: 24,
+			type:'roadmap'
+		}).addTo(map);
+
+		var satMutant = L.gridLayer.googleMutant({
+			maxZoom: 24,
+			type:'satellite'
+		});
+
+		var terrainMutant = L.gridLayer.googleMutant({
+			maxZoom: 24,
+			type:'terrain'
+		});
+
+		var hybridMutant = L.gridLayer.googleMutant({
+			maxZoom: 24,
+			type:'hybrid'
+		});
+
+		var styleMutant = L.gridLayer.googleMutant({
+			styles: [
+				{elementType: 'labels', stylers: [{visibility: 'off'}]},
+				{featureType: 'water', stylers: [{color: '#444444'}]},
+				{featureType: 'landscape', stylers: [{color: '#eeeeee'}]},
+				{featureType: 'road', stylers: [{visibility: 'off'}]},
+				{featureType: 'poi', stylers: [{visibility: 'off'}]},
+				{featureType: 'transit', stylers: [{visibility: 'off'}]},
+				{featureType: 'administrative', stylers: [{visibility: 'off'}]},
+				{featureType: 'administrative.locality', stylers: [{visibility: 'off'}]}
+			],
+			maxZoom: 24,
+			type:'roadmap'
+		});
+
+		var trafficMutant = L.gridLayer.googleMutant({
+			maxZoom: 24,
+			type:'roadmap'
+		});
+		trafficMutant.addGoogleLayer('TrafficLayer');
+
+
+		var transitMutant = L.gridLayer.googleMutant({
+			maxZoom: 24,
+			type:'roadmap'
+		});
+		transitMutant.addGoogleLayer('TransitLayer');
+
+		// ************************************************************
+		// [End] Google base layer variables
+		// ************************************************************
+
+
+		// Base layer JSON object.  Keys are what the user will see,
+		// and values are what will become "active" when the user
+		// selects that option.  For example, if the user selects
+		// Esri NatGeoWorldMap, the base layer will transition to
+		// Esri.NatGeoWorldMap.  Please note: Esri tile layers are
+		// pulled into this page through leaflet-providers.js.
+		var baseLayers = {
+			"Roadmap": roadMutant,
+			"Aerial": satMutant,
+			"Terrain": terrainMutant,
+			"Hybrid": hybridMutant,
+			"Styles": styleMutant,
+			"Traffic": trafficMutant,
+			"Transit": transitMutant,
+			'OpenStreetMap Default': L.tileLayer.provider('OpenStreetMap.Mapnik'),
+			"Esri WorldImagery": L.tileLayer.provider('Esri.WorldImagery'),
+			'Esri NatGeoWorldMap': L.tileLayer.provider('Esri.NatGeoWorldMap')
+		};
+
+		// Overlays JSON object.  This is where options could be
+		// added to show clouds from OpenWeatherMap.  Other layers
+		// could be Rain, Wind, Snow, Precipitation, etc.
+		// The rain layer has been added (and commented out) just to show
+		// the syntax required to add a layer.  Uncommenting that isn't enough
+		// to get it to work though, you'll need to get an API key from
+		// OpenWeatherMap.  You can get that here:
+		// 		https://home.openweathermap.org/api_keys
+		var overlayLayers = {
+			//'OpenWeatherMap Rain': L.tileLayer.provider('OpenWeatherMap.Rain')
+		};
+
+		// Register the base layers JSON object and overlay layers JSON object
+		// with our map.  Set collapsed to true, this requires the user to
+		// hover his mouse over the layer icon to show available layers.
+		L.control.layers(baseLayers, overlayLayers, {collapsed: true}).addTo(map);
+
+
+		// ************************************************************
+		// [Start] Add random markers to map
+		// ************************************************************
+		var kyiv = [50.5, 30.5],
+			lnd = [51.51, -0.12],
+			sf = [37.77, -122.42],
+			dc = [38.91, -77.04],
+			trd = [63.41, 10.41],
+			madBounds = [[40.70, -4.19], [40.12, -3.31]],
+			mad = [40.40, -3.7];
+
+
+		var marker1 = L.marker(kyiv).addTo(map),
+			marker2 = L.marker(lnd).addTo(map),
+			marker3 = L.marker(dc).addTo(map),
+			marker4 = L.marker(sf).addTo(map),
+			marker5 = L.marker(trd).addTo(map),
+			marker6 = L.marker(mad).addTo(map);
+		// ************************************************************
+		// [End] Add random markers to map
+		// ************************************************************
+
+		var rectangle = L.rectangle(madBounds).addTo(map);
+
+		var grid = L.gridLayer({
+			attribution: 'Grid Layer'
+		});
+
+		grid.createTile = function (coords) {
+			var tile = L.DomUtil.create('div', 'tile-coords');
+
+			// Enable the following line to show (x,y,z) coordinates over
+			// each tile.  This is kind of a neat thing to see but gets
+			// a little annoying after a while.
+			//tile.innerHTML = [coords.x, coords.y, coords.z].join(', ');
+
+			return tile;
+		};
+
+		map.addLayer(grid);
+
+	</script>
+
+</body>
+</html>
