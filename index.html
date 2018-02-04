@@ -19,6 +19,8 @@ https://gitlab.com/IvanSanchez/Leaflet.GridLayer.GoogleMutant
 	https://developers.google.com/maps/documentation/javascript/get-api-key
 
 	Then replace <YOUR KEY HERE> with your key.
+
+	REMOVE THIS IF YOU DON'T WANT GOOGLE BASE LAYERS
 	-->
     <script src="https://maps.googleapis.com/maps/api/js?key=<YOUR KEY HERE>" async defer></script>
 
@@ -39,6 +41,8 @@ https://gitlab.com/IvanSanchez/Leaflet.GridLayer.GoogleMutant
 	<!--
 	Additional amazing library that allows us to integrate Google base
 	layers with Leaflet
+
+	REMOVE THIS IF YOU DON'T WANT GOOGLE BASE LAYERS
 	-->
 	<script type="text/javascript" src="Leaflet.GoogleMutant.js"></script>
 
@@ -76,6 +80,7 @@ https://gitlab.com/IvanSanchez/Leaflet.GridLayer.GoogleMutant
 
 		// ************************************************************
 		// [Start] Google base layer variables
+		// REMOVE THIS SECTION IF YOU DON'T WANT GOOGLE BASE LAYERS
 		// These variables are set to JSON values within the available 
 		// base layers
 		// ************************************************************
@@ -139,13 +144,13 @@ https://gitlab.com/IvanSanchez/Leaflet.GridLayer.GoogleMutant
 		// Esri.NatGeoWorldMap.  Please note: Esri tile layers are
 		// pulled into this page through leaflet-providers.js.
 		var baseLayers = {
-			"Roadmap": roadMutant,
-			"Aerial": satMutant,
-			"Terrain": terrainMutant,
-			"Hybrid": hybridMutant,
-			"Styles": styleMutant,
-			"Traffic": trafficMutant,
-			"Transit": transitMutant,
+			"Roadmap": roadMutant,		// REMOVE THIS IF YOU DON'T WANT GOOGLE BASE LAYERS
+			"Aerial": satMutant,		// REMOVE THIS IF YOU DON'T WANT GOOGLE BASE LAYERS
+			"Terrain": terrainMutant,	// REMOVE THIS IF YOU DON'T WANT GOOGLE BASE LAYERS
+			"Hybrid": hybridMutant,		// REMOVE THIS IF YOU DON'T WANT GOOGLE BASE LAYERS
+			"Styles": styleMutant,		// REMOVE THIS IF YOU DON'T WANT GOOGLE BASE LAYERS
+			"Traffic": trafficMutant,	// REMOVE THIS IF YOU DON'T WANT GOOGLE BASE LAYERS
+			"Transit": transitMutant,	// REMOVE THIS IF YOU DON'T WANT GOOGLE BASE LAYERS
 			'OpenStreetMap Default': L.tileLayer.provider('OpenStreetMap.Mapnik'),
 			"Esri WorldImagery": L.tileLayer.provider('Esri.WorldImagery'),
 			'Esri NatGeoWorldMap': L.tileLayer.provider('Esri.NatGeoWorldMap')
